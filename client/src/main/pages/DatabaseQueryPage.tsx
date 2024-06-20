@@ -1,4 +1,5 @@
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import CodeMirror, { EditorView, Prec, keymap } from '@uiw/react-codemirror';
 import {
   Button,
   Form,
@@ -18,6 +19,8 @@ import { getQueryParameter, setQueryParameter } from "../util/query.param.util";
 import "./DatabaseQueryPage.css";
 
 const { TextArea } = Input;
+import { MySQL, sql } from "@codemirror/lang-sql";
+import { androidstudio } from "@uiw/codemirror-theme-androidstudio";
 
 const SQL_QUERY = "sqlQuery";
 
@@ -173,7 +176,7 @@ export const DatabaseQueryPage = () => {
         </div>
       )}
       <Form onFinish={() => handleSubmit(page, pageSize)}>
-        <Form.Item
+        {/* <Form.Item
           rules={[{ required: true, message: "Please, provide a query" }]}
         >
           <TextArea
@@ -184,6 +187,51 @@ export const DatabaseQueryPage = () => {
             rows={10}
             id="query-input"
             onKeyPress={handleKeyPress}
+          />
+        </Form.Item> */}
+        <Form.Item
+          rules={[{ required: true, message: "Please, provide a query" }]}
+        >
+          <CodeMirror
+            value={query}
+              sql({
+                dialect: MySQL,
+                schema: {
+                  "Competitions": ["id", "name", "cityName", "countryId", "information", "venue", "venueAddress", "venueDetails", "external_website", "cellName", "showAtAll", "latitude", "longitude", "contact", "remarks", "registration_open", "registration_close", "use_wca_registration", "guests_enabled", "results_posted_at", "results_nag_sent_at", "generate_website", "announced_at", "base_entry_fee_lowest_denomination", "currency_code", "connected_stripe_account_id", "start_date", "end_date", "enable_donations", "competitor_limit_enabled", "competitor_limit", "competitor_limit_reason", "extra_registration_requirements", "on_the_spot_registration", "on_the_spot_entry_fee_lowest_denomination", "refund_policy_percent", "refund_policy_limit_date", "guests_entry_fee_lowest_denomination", "created_at", "updated_at", "results_submitted_at", "early_puzzle_submission", "early_puzzle_submission_reason", "qualification_results", "qualification_results_reason", "name_reason", "external_registration_page", "confirmed_at", "event_restrictions", "event_restrictions_reason", "registration_reminder_sent_at",],
+                  "CompetitionsMedia": ["id", "competitionId", "type", "text", "uri", "submitterName", "submitterComment", "submitterEmail", "timestampSubmitted", "timestampDecided", "status"],
+                  "ConciseAverageResults": ["id", "average", "valueAndId", "personId", "eventId", "countryId", "continentId", "year", "month", "day"],
+                  "ConciseSingleResults": ["id", "best", "valueAndId", "personId", "eventId", "countryId", "continentId", "year", "month", "day"],
+                  "Continents": ["id", "name", "recordName", "latitude", "longitude", "zoom"],
+                  "Countries": ["id", "name", "continentId", "iso2"],
+                  "Events": ["id", "name", "rank", "format", "cellName"],
+                  "Formats": ["id", "name", "sort_by", "sort_by_second", "expected_solve_count", "trim_fastest_n", "trim_slowest_n"],
+                  "InboxPersons": ["id", "wcaId", "name", "countryId", "gender", "dob", "competitionId"],
+                  "InboxResults": ["id", "personId", "pos", "competitionId", "eventId", "roundTypeId", "formatId", "value1", "value2", "value3", "value4", "value5", "best", "average"],
+                  "Persons": ["id", "wca_id", "subId", "name", "countryId", "gender", "dob", "comments", "incorrect_wca_id_claim_count"],
+                  "RanksAverage": ["id", "personId", "eventId", "best", "worldRank", "continentRank", "countryRank"],
+                  "RanksSingle": ["id", "personId", "eventId", "best", "worldRank", "continentRank", "countryRank"],
+                  "Results": ["id", "pos", "personId", "personName", "countryId", "competitionId", "eventId", "roundTypeId", "formatId", "value1", "value2", "value3", "value4", "value5", "best", "average", "regionalSingleRecord", "regionalAverageRecord", "updated_at"],
+                }
+              }),
+              EditorView.lineWrapping,
+              Prec.highest(
+                keymap.of([
+                  {
+                    key: "Mod-Enter", run: () => {
+                      query.length && handleSubmit(page, pageSize);
+                      return true;
+                    }
+                  }
+                ])
+              ),
+            ]}
+            id="query-input"
+            onChange={(val) => setQuery(val)}
+            indentWithTab
+            basicSetup={{
+              lineNumbers: false,
+              foldGutter: false,
+            }}
           />
         </Form.Item>
         {replaceList.map((replaceItem) => (

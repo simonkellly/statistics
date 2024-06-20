@@ -19,3 +19,24 @@
 .options-button {
   margin: 10px;
 }
+
+.cm-editor {
+  text-align: left;
+  border-radius: 6px;
+  outline: 1px solid #d9d9d9
+}
+
+.cm-editor.cm-focused {
+  outline: 1px solid #1677ff;
+}
+
+.cm-editor {
+  resize: vertical;
+  height: auto;
+  overflow: auto;
+  min-height: 350px;
+}
+
+.cm-editor[style*="height"] {
+  min-height: unset;
+}
